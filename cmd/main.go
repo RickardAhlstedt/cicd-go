@@ -35,13 +35,13 @@ func main() {
 
 	if *watch {
 		fmt.Println("ℹ️ Watching for file change in: ", workingDir)
-		watcher.StartWatching(workingDir)
+		watcher.StartWatching(workingDir, buildFile)
 	} else {
 		fmt.Printf("ℹ️ Working in: %s\n", workingDir)
 		config, err := cfg.LoadConfig(configPath)
 		if err != nil {
 			log.Fatalf("ℹ️ Failed to load build.yaml: %v", err)
 		}
-		executor.RunBuild(config)
+		executor.RunBuild(config, *buildFile, "", "")
 	}
 }

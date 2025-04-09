@@ -1,0 +1,12 @@
+build: 1.2
+
+steps:
+  - name: "Echoing $FILE"
+    command: "echo $FILE"
+
+ignore:
+  - "output/"
+  - ".git"
+  - "*.log"
+  - "build.yaml"
+  - "readme.md"

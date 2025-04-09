@@ -1,0 +1,17 @@
+inherit: "./base.yaml"
+version: 1.1
+
+vars:
+  ENV: "prod"  # This will be override the base.yaml-value
+  
+steps:
+  - name: "Build binary"
+    command: "go build -o cicd-go ./cmd"
+
+post_build:
+  - name: "Move binary"
+    command: "mv cicd-go output/cicd-go"
+
+  - name: "Copy to global path"
+    command: "cp output/cicd-go /usr/local/bin"
+    if: "$GLOBAL == true"

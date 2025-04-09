@@ -1,4 +1,8 @@
-version: 1.0
+version: 1.2
+
+vars:
+  GLOBAL: "true"
+
 setup:
   - name: "Install dependencies"
     command: "go mod tidy"
@@ -12,11 +16,11 @@ post_build:
     command: "mv cicd-go output/cicd-go"
   - name: "Copying binary to global path"
     command: "cp output/cicd-go /usr/local/bin"
-    if: "env.GLOBAL == 'true'"
+    if: "$GLOBAL == true"
 
 ignore:
   - "output/"
-  - ".git"
+  - ".git/"
   - "*.log"
   - "build.yaml"
   - "readme.md"
