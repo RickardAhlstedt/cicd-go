@@ -1,0 +1,20 @@
+version: 1.1
+
+vars:
+  GLOBAL: "true"
+  ENV: "dev"
+
+ignore:
+  - "output/"
+  - "*.log"
+  - ".DS_Store"
+
+setup:
+  - name: "Install dependencies"
+    command: "go mod tidy"
+
+parallel:
+  - name: "Code quality checks"
+    commands:
+      - "go vet ./..."
+      - "golangci-lint run ./..."

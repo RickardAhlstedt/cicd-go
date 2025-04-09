@@ -1,0 +1,48 @@
+{
+  "Inherit": "./base.yaml",
+  "ConfigVersion": "1.1",
+  "Setup": [
+    {
+      "Name": "Install dependencies",
+      "Command": "go mod tidy",
+      "If": ""
+    }
+  ],
+  "Steps": [
+    {
+      "Name": "Build binary",
+      "Command": "go build -o cicd-go ./cmd",
+      "If": ""
+    }
+  ],
+  "PostBuild": [
+    {
+      "Name": "Move binary",
+      "Command": "mv cicd-go output/cicd-go",
+      "If": ""
+    },
+    {
+      "Name": "Copy to global path",
+      "Command": "cp output/cicd-go /usr/local/bin",
+      "If": "$GLOBAL == true"
+    }
+  ],
+  "Parallel": [
+    {
+      "Name": "Code quality checks",
+      "Commands": [
+        "go vet ./...",
+        "golangci-lint run ./..."
+      ]
+    }
+  ],
+  "Ignore": [
+    "output/",
+    "*.log",
+    ".DS_Store"
+  ],
+  "Variables": {
+    "ENV": "prod",
+    "GLOBAL": "true"
+  }
+}
