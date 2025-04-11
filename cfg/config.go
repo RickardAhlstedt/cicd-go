@@ -11,7 +11,8 @@ import (
 )
 
 type BuildConfig struct {
-	Inherit       string            `yaml:"inherit"`
+	Inherit       string `yaml:"inherit"`
+	RootPath      string
 	ConfigVersion string            `yaml:"version"`
 	Setup         []BuildStep       `yaml:"setup,omitempty"`
 	Steps         []BuildStep       `yaml:"steps,omitempty"`
@@ -43,6 +44,8 @@ func LoadConfig(path string) (*BuildConfig, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	config.RootPath = filepath.Dir(path)
 
 	if config.Inherit != "" {
 		basePath := config.Inherit
@@ -80,21 +83,29 @@ func LoadConfig(path string) (*BuildConfig, error) {
 }
 
 func (c *BuildConfig) ShouldIgnore(path string) bool {
-	normalizedPath := filepath.ToSlash(path)
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return false
+	}
+
+	relPath, err := filepath.Rel(c.RootPath, absPath)
+	if err != nil {
+		return false
+	}
+
+	relPath = filepath.ToSlash(relPath)
 
 	for _, pattern := range c.Ignore {
-		normalizedPattern := filepath.ToSlash(pattern)
-
-		if matched, _ := doublestar.Match(normalizedPattern, normalizedPath); matched {
+		pattern = filepath.ToSlash(pattern)
+		match, err := doublestar.PathMatch(pattern, relPath)
+		if err != nil {
+			continue
+		}
+		if match {
 			return true
 		}
-
-		if strings.HasSuffix(normalizedPattern, "/") {
-			if matched, _ := doublestar.Match(normalizedPattern+"**", normalizedPath); matched {
-				return true
-			}
-		}
 	}
+
 	return false
 }
 

@@ -65,8 +65,8 @@ post_build:
     if: "$GLOBAL == true"
 
 ignore:
-  - "output/"
-  - ".git"
+  - "output/**"
+  - ".git/**"
   - "*.log"
   - "build.yaml"
   - "readme.md"

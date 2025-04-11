@@ -1,4 +1,4 @@
-version: 1.2
+version: 1.1
 
 vars:
   GLOBAL: "true"
@@ -19,8 +19,9 @@ post_build:
     if: "$GLOBAL == true"
 
 ignore:
-  - "output/"
-  - ".git/"
+  - "output/*"
+  - "cfg/*"
+  - ".git/*"
   - "*.log"
   - "build.yaml"
   - "readme.md"

@@ -5,7 +5,8 @@ vars:
   ENV: "dev"
 
 ignore:
-  - "output/"
+  - "output/**"
+  - ".git/**"
   - "*.log"
   - ".DS_Store"
 

@@ -12,7 +12,7 @@ import (
 	"github.com/RickardAhlstedt/cicd-go/internal/watcher"
 )
 
-const VERSION = "1.0"
+const VERSION = "1.2"
 
 func main() {
 
@@ -29,6 +29,10 @@ func main() {
 	config, err := cfg.LoadConfig(configPath)
 	if err != nil {
 		log.Fatalf("❌ Failed to load build.yaml:\n%v", err)
+	}
+
+	if config.ConfigVersion < VERSION {
+		fmt.Printf("⚠️ %s is using an older version than the binary was compiled for.\nCurrent binary-version: %s, file-version: %s\n", *buildFile, VERSION, config.ConfigVersion)
 	}
 
 	config.Ignore = append(config.Ignore, "build.yaml")
